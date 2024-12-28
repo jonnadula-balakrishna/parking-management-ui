@@ -35,8 +35,8 @@ const ParkVehicle = () => {
         <div
             className="container d-flex justify-content-center align-items-center"
             style={{
-                minHeight: 'calc(100vh - 70px)', // Adjust height to account for the navbar
-                backgroundColor: '#f4f4f4',
+                minHeight: 'calc(100vh - 80px)', // Adjust height to account for the navbar
+                // backgroundColor: '#f4f4f4',
                 padding: '20px',
             }}
         >
@@ -46,14 +46,14 @@ const ParkVehicle = () => {
                     width: '100%',
                     maxWidth: '450px',
                     borderRadius: '12px',
-                    backgroundColor: '#ffffff',
+                    // backgroundColor: '#F8F9FA',
                 }}
             >
                 <div
                     className="card-header text-center"
                     style={{
-                        backgroundColor: '#343a40',
-                        color: 'white',
+                        backgroundColor: '#F8F9FA',
+                        // color: 'white',
                         padding: '10px',
                         borderRadius: '12px 12px 0 0',
                         fontWeight: '600',
@@ -130,16 +130,16 @@ const ParkVehicle = () => {
                                 }}
                             >
                                  <option value="" disabled selected>Select Vehicle Type</option> {/* Disabled placeholder */}
-                                <option value="CAR">Car</option>
-                                <option value="BUS">Bus</option>
-                                <option value="TRUCK">Truck</option>
-                                <option value="BIKE">Bike</option>
+                                <option value="CAR">CAR</option>
+                                <option value="BUS">BUS</option>
+                                <option value="TRUCK">TRUCK</option>
+                                <option value="BIKE">BIKE</option>
                             </select>
                         </div>
                         <button
                             type="button"
                             onClick={handleRegisterVehicle}
-                            className="btn btn-dark w-100"
+                            className="btn btn-primary w-100"
                             style={{
                                 fontWeight: '600',
                                 padding: '10px',

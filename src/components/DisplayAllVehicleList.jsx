@@ -54,9 +54,10 @@ const DisplayAllVehicleList = () => {
 
     return (
         <div className="container mt-2">
-            <h2 className="text-center" style={{ color: "#4CAF50" }}>
-                All Vehicles
-            </h2>
+            {/* <h2 className="text-center" style={{ color: "#4CAF50" }}>
+                All Registered Vehicles
+            </h2> */}
+            
             <table
                 id="vehicleTable"
                 className="display"
@@ -66,7 +67,7 @@ const DisplayAllVehicleList = () => {
                     className="table-header"
                     style={{
                         borderBottom: "",
-                        backgroundColor: "#c2c4c4", // Light gray background color
+                        backgroundColor: "#F8F9FB", // Light gray background color
                         color: "#000", // Optional: Set text color for contrast
                     }}
                 >

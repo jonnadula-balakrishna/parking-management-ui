@@ -23,6 +23,21 @@ const Dashboard = () => {
         }
     };
 
+    const getImageByVehicleType = (type) => {
+        switch (type.toUpperCase()) {
+            case 'CAR':
+                return "https://img.icons8.com/plasticine/100/car--v1.png";
+            case 'BUS':
+                return "https://img.icons8.com/fluency/100/bus.png";
+            case 'TRUCK':
+                return "https://img.icons8.com/color/100/semi-truck-side-view.png";
+            case 'BIKE':
+                return "https://img.icons8.com/arcade/100/scooter.png";
+            default:
+                return null; // No image for unknown types
+        }
+    };
+
     const generateSlots = (vehicleType, totalSlots, availableSlotCodes) => {
         const prefix = getPrefixByVehicleType(vehicleType);
         const allSlots = [];
@@ -43,7 +58,7 @@ const Dashboard = () => {
             style={{
                 padding: "20px",
                 fontFamily: "Arial, sans-serif",
-                backgroundImage: 'url("E:\React\parking-lot\src\images.jpg")', // Add your background image URL here
+                backgroundImage: 'url("E:\\React\\parking-lot\\src\\images.jpg")', // Add your background image URL here
                 backgroundSize: "cover",
                 backgroundPosition: "center",
                 backgroundAttachment: "fixed",  // Optional: Keeps background fixed when scrolling
@@ -58,6 +73,7 @@ const Dashboard = () => {
             >
                 {slots.map((slot, index) => {
                     const allSlots = generateSlots(slot.typeOfVehicle, slot.totalSlots, slot.availableSlotCodes);
+                    const vehicleImage = getImageByVehicleType(slot.typeOfVehicle);
 
                     return (
                         <div
@@ -71,7 +87,18 @@ const Dashboard = () => {
                                 opacity: 0.9,  // Optional: Adjust opacity for overlay effect
                             }}
                         >
-                            <h2 style={{ color: "rgba(203, 156, 15, 0.77)" }}>{slot.typeOfVehicle}</h2>
+
+                            <h2 style={{ color: "rgba(203, 156, 15, 0.77)" }}> {vehicleImage && (
+                                <img
+                                    src={vehicleImage}
+                                    alt={`${slot.typeOfVehicle} icon`}
+                                    style={{
+                                        width: "50px",
+                                        height: "50px",
+                                        margin: "0 auto 10px", // Center the image and add margin below
+                                    }}
+                                />
+                            )} &nbsp;{slot.typeOfVehicle}</h2>
                             <p>
                                 Slots: {slot.availableSlots} / {slot.totalSlots}
                             </p>

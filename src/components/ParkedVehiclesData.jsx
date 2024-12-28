@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import vehicleService from "../services/vehicleService";
 import { toast } from "react-toastify";
+import "bootstrap/dist/css/bootstrap.min.css"; // Importing Bootstrap CSS
 
 const ParkedVehiclesData = () => {
     const [parkedVehiclesData, setParkedVehiclesData] = useState([]);
@@ -38,7 +39,12 @@ const ParkedVehiclesData = () => {
             .unParkVehicle(selectedSlot)
             .then((res) => {
                 toast.success(res.data);
-                setFilteredVehicles(filteredVehicles.filter((vehicle) => vehicle.slotNumber !== selectedSlot));
+
+                // Update the parkedVehiclesData and filteredVehicles after unpark
+                const updatedParkedVehicles = parkedVehiclesData.filter((vehicle) => vehicle.slotNumber !== selectedSlot);
+                setParkedVehiclesData(updatedParkedVehicles);
+                setFilteredVehicles(updatedParkedVehicles.filter((vehicle) => vehicle.vehicleTypes === selectedType || selectedType === ""));
+
             })
             .catch((err) => toast.error(err))
             .finally(() => setShowModal(false));
@@ -51,12 +57,13 @@ const ParkedVehiclesData = () => {
 
     return (
         <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-            <h2 style={{ textAlign: "center", color: "#199442" }}>Parked Vehicles List</h2>
+            {/* Dropdown Filter */}
             <div style={{ marginBottom: "20px", display: "flex", justifyContent: "right" }}>
                 <select
                     value={selectedType}
                     onChange={handleTypeChange}
-                    style={{ padding: "10px", borderRadius: "4px", border: "1px solid #ddd" }}
+                    className="form-select"
+                    style={{ maxWidth: "300px" }}
                 >
                     <option value="">Select Vehicle Type</option>
                     {vehicleTypes.map((type) => (
@@ -66,44 +73,49 @@ const ParkedVehiclesData = () => {
                     ))}
                 </select>
             </div>
+
+            {/* Table Container */}
             <div
                 style={{
                     width: "100%",
                     maxHeight: "400px", // Set max height for the table container
                     overflowY: "auto", // Enable vertical scrolling
-                    border: "1px solid #ddd", // Optional border for visual clarity
-                    borderRadius: "4px",
+                    // border: "1px solid #e0e0e0", // Light gray border
+                    borderRadius: "8px",
+                    backgroundColor: "#fafafa", // Light background color
                 }}
             >
-                <table style={{ width: "100%", borderCollapse: "collapse" }}>
-                    <thead>
-                        <tr style={{ backgroundColor: "#f2f2f2" }}>
-                            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Owner</th>
-                            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Vehicle Number</th>
-                            <th style={{ border: "1px solid #ddd", padding: "5px" }}>Vehicle Type</th>
-                            <th style={{ border: "1px solid #ddd", padding: "2px" }}>Slot Number</th>
-                            <th style={{ border: "1px solid #ddd", padding: "8px" }}>In Time</th>
-                            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Vehicle Status</th>
-                            <th style={{ border: "1px solid #ddd", padding: "8px" }}>Action</th>
+                <table className="table table-bordered table-light">
+                    <thead className="table-secondary">
+                        <tr>
+                            <th>Paking Id</th>
+                            <th>Owner</th>
+                            <th>Vehicle Number</th>
+                            <th>Vehicle Type</th>
+                            <th>Slot Number</th>
+                            <th>In Time</th>
+                            <th>Vehicle Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         {filteredVehicles.map((vehicle) => (
                             <tr key={vehicle.parkingRegId}>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{vehicle.vehicleOwner}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{vehicle.vehicleNumber}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{vehicle.vehicleTypes}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{vehicle.slotNumber}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>{new Date(vehicle.vehicleIn).toLocaleString()}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px", color: "#0bdb70" }}>{vehicle.slotStatus}</td>
-                                <td style={{ border: "1px solid #ddd", padding: "8px" }}>
+                                <td>{vehicle.parkingRegId}</td>
+                                <td>{vehicle.vehicleOwner}</td>
+                                <td>{vehicle.vehicleNumber}</td>
+                                <td>{vehicle.vehicleTypes}</td>
+                                <td>{vehicle.slotNumber}</td>
+                                <td>{new Date(vehicle.vehicleIn).toLocaleString()}</td>
+                                <td style={{ color: "#0dbd70" }}>{vehicle.slotStatus}</td>
+                                <td>
                                     <button
-                                        className="btn btn-danger"
+                                        className="btn btn-outline-danger"
                                         style={{
                                             transition: "background-color 0.3s ease",
                                         }}
                                         onMouseEnter={(e) => {
-                                            e.target.style.backgroundColor = "#12798a";
+                                            e.target.style.backgroundColor = "#ff5c8d"; // Light hover effect
                                         }}
                                         onMouseLeave={(e) => {
                                             e.target.style.backgroundColor = "";
@@ -161,7 +173,6 @@ const ParkedVehiclesData = () => {
                 </div>
             )}
         </div>
-
     );
 };
 
