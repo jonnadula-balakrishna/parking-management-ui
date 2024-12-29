@@ -35,7 +35,7 @@ const ParkVehicle = () => {
         <div
             className="container d-flex justify-content-center align-items-center"
             style={{
-                minHeight: 'calc(100vh - 80px)', // Adjust height to account for the navbar
+                // minHeight: 'calc(100vh - 80px)', // Adjust height to account for the navbar
                 // backgroundColor: '#f4f4f4',
                 padding: '20px',
             }}

@@ -22,6 +22,12 @@ class vehicleService {
     getAllVehicleList() {
         return axios.get(BASE_URL + "/get_all_vehicle_list");
     }
+
+    getVehicleInfoBySlotCode(slotCode) {
+        return axios.get(BASE_URL + "/getSlotInfo/" + slotCode);
+
+    }
 }
+
 
 export default new vehicleService();

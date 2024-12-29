@@ -7,6 +7,7 @@ const ParkedVehiclesData = () => {
     const [parkedVehiclesData, setParkedVehiclesData] = useState([]);
     const [selectedType, setSelectedType] = useState("");
     const [filteredVehicles, setFilteredVehicles] = useState([]);
+    const [searchSlot, setSearchSlot] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [selectedSlot, setSelectedSlot] = useState(null);
 
@@ -22,11 +23,24 @@ const ParkedVehiclesData = () => {
     const handleTypeChange = (event) => {
         const type = event.target.value;
         setSelectedType(type);
+        filterVehicles(type, searchSlot);
+    };
+
+    const handleSearchChange = (event) => {
+        const slot = event.target.value;
+        setSearchSlot(slot);
+        filterVehicles(selectedType, slot);
+    };
+
+    const filterVehicles = (type, slot) => {
+        let filtered = parkedVehiclesData;
         if (type) {
-            setFilteredVehicles(parkedVehiclesData.filter((vehicle) => vehicle.vehicleTypes === type));
-        } else {
-            setFilteredVehicles(parkedVehiclesData);
+            filtered = filtered.filter((vehicle) => vehicle.vehicleTypes === type);
         }
+        if (slot) {
+            filtered = filtered.filter((vehicle) => vehicle.slotNumber.toString().includes(slot));
+        }
+        setFilteredVehicles(filtered);
     };
 
     const handleUnParkClick = (slotNumber) => {
@@ -40,11 +54,15 @@ const ParkedVehiclesData = () => {
             .then((res) => {
                 toast.success(res.data);
 
-                // Update the parkedVehiclesData and filteredVehicles after unpark
                 const updatedParkedVehicles = parkedVehiclesData.filter((vehicle) => vehicle.slotNumber !== selectedSlot);
                 setParkedVehiclesData(updatedParkedVehicles);
-                setFilteredVehicles(updatedParkedVehicles.filter((vehicle) => vehicle.vehicleTypes === selectedType || selectedType === ""));
-
+                setFilteredVehicles(
+                    updatedParkedVehicles.filter(
+                        (vehicle) =>
+                            (vehicle.vehicleTypes === selectedType || selectedType === "") &&
+                            (searchSlot === "" || vehicle.slotNumber.toString().includes(searchSlot))
+                    )
+                );
             })
             .catch((err) => toast.error(err))
             .finally(() => setShowModal(false));
@@ -57,8 +75,18 @@ const ParkedVehiclesData = () => {
 
     return (
         <div style={{ padding: "20px", fontFamily: "Arial, sans-serif" }}>
-            {/* Dropdown Filter */}
-            <div style={{ marginBottom: "20px", display: "flex", justifyContent: "right" }}>
+            {/* Filters */}
+            <div style={{ marginBottom: "20px", display: "flex", justifyContent: "space-between" }}>
+                {/* Search by Slot Number */}
+                <input
+                    type="text"
+                    placeholder="Search by Slot Number"
+                    value={searchSlot}
+                    onChange={handleSearchChange}
+                    className="form-control"
+                    style={{ maxWidth: "300px", marginRight: "10px" }}
+                />
+                {/* Dropdown Filter */}
                 <select
                     value={selectedType}
                     onChange={handleTypeChange}
@@ -78,17 +106,16 @@ const ParkedVehiclesData = () => {
             <div
                 style={{
                     width: "100%",
-                    maxHeight: "400px", // Set max height for the table container
-                    overflowY: "auto", // Enable vertical scrolling
-                    // border: "1px solid #e0e0e0", // Light gray border
+                    maxHeight: "400px",
+                    overflowY: "auto",
                     borderRadius: "8px",
-                    backgroundColor: "#fafafa", // Light background color
+                    backgroundColor: "#fafafa",
                 }}
             >
                 <table className="table table-bordered table-light">
                     <thead className="table-secondary">
                         <tr>
-                            <th>Paking Id</th>
+                            <th>Parking Id</th>
                             <th>Owner</th>
                             <th>Vehicle Number</th>
                             <th>Vehicle Type</th>
@@ -111,15 +138,6 @@ const ParkedVehiclesData = () => {
                                 <td>
                                     <button
                                         className="btn btn-outline-danger"
-                                        style={{
-                                            transition: "background-color 0.3s ease",
-                                        }}
-                                        onMouseEnter={(e) => {
-                                            e.target.style.backgroundColor = "#ff5c8d"; // Light hover effect
-                                        }}
-                                        onMouseLeave={(e) => {
-                                            e.target.style.backgroundColor = "";
-                                        }}
                                         onClick={() => handleUnParkClick(vehicle.slotNumber)}
                                     >
                                         Unpark
